@@ -1,64 +1,6 @@
 import numpy as np
 
 
-def fc_forward(x, w, b):
-    """
-    Computes the forward pass for a fully-connected layer.
-    
-    The input x has shape (N, Din) and contains a minibatch of N
-    examples, where each example x[i] has shape (Din,).
-    
-    Inputs:
-    - x: A numpy array containing input data, of shape (N, Din)
-    - w: A numpy array of weights, of shape (Din, Dout)
-    - b: A numpy array of biases, of shape (Dout,)
-    
-    Returns a tuple of:
-    - out: output, of shape (N, Dout)
-    - cache: (x, w, b)
-    """
-    out = None
-    ###########################################################################
-    # TODO: Implement the forward pass. Store the result in out.              #
-    ###########################################################################
-    N, D_in = x.shape
-    _, D_out = w.shape
-    out = x @ w + b
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-    cache = (x, w, b)
-    return out, cache
-
-
-def fc_backward(dout, cache):
-    """
-    Computes the backward pass for a fully_connected layer.
-    
-    Inputs:
-    - dout: Upstream derivative, of shape (N, Dout)
-    - cache: returned by your forward function. Tuple of:
-      - x: Input data, of shape (N, Din)
-      - w: Weights, of shape (Din, Dout)
-      - b: Biases, of shape (Dout,)
-      
-    Returns a tuple of:
-    - dx: Gradient with respect to x, of shape (N, Din)
-    - dw: Gradient with respect to w, of shape (Din, Dout)
-    - db: Gradient with respect to b, of shape (Dout,)
-    """
-    x, w, b = cache
-    dx, dw, db = None, None, None
-    ###########################################################################
-    # TODO: Implement the affine backward pass.                               #
-    ###########################################################################
-
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-    return dx, dw, db
-
-
 def relu_forward(x):
     """
     Computes the forward pass for a layer of rectified linear units (ReLUs).
@@ -102,32 +44,6 @@ def relu_backward(dout, cache):
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return dx
-
-
-def l2_loss(x, y):
-    """
-    Computes the loss and gradient of L2 loss.
-    loss = 1/N * sum((x - y)**2)
-
-    Inputs:
-    - x: Input data, of shape (N, D)
-    - y: Output data, of shape (N, D)
-
-    Returns a tuple of:
-    - loss: Scalar giving the loss
-    - dx: Gradient of the loss with respect to x
-    """
-    loss, dx = None, None
-    ###########################################################################
-    # TODO: Implement L2 loss                                                 #
-    ###########################################################################
-    N, D = x.shape
-    loss = (1 / N) * np.sum((x - y) ** 2)
-    dx = (2 / N) * (x - y)
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-    return loss, dx
 
 
 def softmax_loss(x, y):
