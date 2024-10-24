@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def fc_forward(x, w, b):
     """
     Computes the forward pass for a fully-connected layer.
@@ -20,10 +21,9 @@ def fc_forward(x, w, b):
     ###########################################################################
     # TODO: Implement the forward pass. Store the result in out.              #
     ###########################################################################
-	N, D_in = x.shape
-	_, D_out = w.shape
-	
-	out = x @ w + b
+    N, D_in = x.shape
+    _, D_out = w.shape
+    out = x @ w + b
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -52,11 +52,12 @@ def fc_backward(dout, cache):
     ###########################################################################
     # TODO: Implement the affine backward pass.                               #
     ###########################################################################
-        
+
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return dx, dw, db
+
 
 def relu_forward(x):
     """
@@ -102,6 +103,7 @@ def relu_backward(dout, cache):
     ###########################################################################
     return dx
 
+
 def l2_loss(x, y):
     """
     Computes the loss and gradient of L2 loss.
@@ -119,35 +121,35 @@ def l2_loss(x, y):
     ###########################################################################
     # TODO: Implement L2 loss                                                 #
     ###########################################################################
-	N, D = x.shape
-	loss = (1 / N) * np.sum((x - y) ** 2)
-	dx = (2 / N) * (x - y)
+    N, D = x.shape
+    loss = (1 / N) * np.sum((x - y) ** 2)
+    dx = (2 / N) * (x - y)
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return loss, dx
 
+
 def softmax_loss(x, y):
-   """
-    Computes the loss and gradient for softmax classification.
-
-    Inputs:
-    - x: Input data, of shape (N, C) where x[i, j] is the score for the jth
-      class for the ith input.
-    - y: Vector of labels, of shape (N,) where y[i] is the label for x[i] and
-      0 <= y[i] < C
-
-    Returns a tuple of:
-    - loss: Scalar giving the loss
-    - dx: Gradient of the loss with respect to x
     """
+     Computes the loss and gradient for softmax classification.
+
+     Inputs:
+     - x: Input data, of shape (N, C) where x[i, j] is the score for the jth
+       class for the ith input.
+     - y: Vector of labels, of shape (N,) where y[i] is the label for x[i] and
+       0 <= y[i] < C
+
+     Returns a tuple of:
+     - loss: Scalar giving the loss
+     - dx: Gradient of the loss with respect to x
+     """
     loss, dx = None, None
     ###########################################################################
     # TODO: Implement softmax loss                                            #
     ###########################################################################
-    
+
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return loss, dx
-
