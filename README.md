@@ -7,7 +7,7 @@ This repository contains my coursework for CSE803, a graduate-level Computer Vis
 - [CSE803: Computer Vision Coursework](#cse803-computer-vision-coursework)
   - [Projects](#projects)
     - [Homework 1: Camera Projection, Color Photography, and Illuminance](#homework-1-camera-projection-color-photography-and-illuminance)
-    - [Homework 2: TBD](#homework-2-tbd)
+    - [Homework 2: Image Filtering, Feature Extraction, and Blob Detection](#homework-2-image-filtering-feature-extraction-and-blob-detection)
     - [Homework 3: TBD](#homework-3-tbd)
     - [Homework 4: TBD](#homework-4-tbd)
     - [Homework 5: TBD](#homework-5-tbd)
@@ -63,3 +63,62 @@ Developed algorithms for 3D camera projection, color image reconstruction from g
 - Color space analysis (RGB, LAB).
 - Numerical optimization (offset search).
 - Visualization of image channels.
+
+### Homework 2: Image Filtering, Feature Extraction, and Blob Detection
+
+#### Description
+Implemented image processing techniques on `grace_hopper.png` and `polka.png`, including filtering, edge detection, corner detection, and blob detection for cell counting in microscopy images. The project included three tasks: image filtering (Gaussian, Sobel, LoG), Harris corner detection, and scale-space blob detection.
+
+#### Approach
+- **Task 1: Image Filtering**:
+  - **Image Patches**: Divided `grace_hopper.png` (grayscale) into 16x16 patches, normalized to zero mean and unit variance using `image_patches()` in `filters.py`.
+  - **Gaussian Filter**:
+    - Proved 2D Gaussian convolution equals sequential 1D vertical and horizontal convolutions, with equal variances.
+    - Applied 3x3 Gaussian kernel (`σ² ≈ 2 ln 2`) via `convolve()` to `grace_hopper.png`, implementing true convolution.
+    - Derived derivative kernels for edge detection (`edge_detection()`), computing gradient magnitude.
+    - Compared edge detection on original vs. Gaussian-filtered images.
+  - **Sobel Operator**:
+    - Proved Sobel operators approximate derivatives of Gaussian-filtered images.
+    - Implemented `sobel_operator()` to compute `Gx`, `Gy`, and gradient magnitude.
+    - Derived steerable filter kernel `K(α)` for `S(I, α) = Gx cos α + Gy sin α`, implemented `steerable_filter()` for `α = [0, π/6, π/3, π/2, 2π/3, 5π/6]`.
+  - **LoG Filter**:
+    - Applied two LoG filters via `filters.py`, comparing outputs for edge and blob detection.
+    - Explained DoG as a LoG approximation, visualizing Gaussian differences.
+- **Task 2: Harris Corner Detection**:
+  - Implemented `corner_score()` to compute SSD-based `E(u,v)` for offsets (u,v), testing shifts of ±5 pixels.
+  - Developed `harris_detector()` to compute structure tensor `M` via convolution, calculating cornerness `R = det(M) - 0.05 * trace(M)²` with Gaussian-weighted sums.
+  - Generated corner score heatmap for `grace_hopper.png`.
+- **Task 3: Blob Detection**:
+  - **Single-Scale**: Implemented `gaussian_filter()` and applied DoG filters on `polka.png`, selecting `σ` pairs (`σ1=1, σ2=1.414` for small dots; `σ1=2, σ2=2.828` for large dots) based on `r = √2σ`.
+  - **Scale Space**: Built scale-space representation (`scale_space()`) with `σ_min=1`, `k=√2`, `S=8`, generating 7 DoG levels.
+  - **Blob Detection**: Used `find_maxima()` to detect peaks, tuning `k_xy=3`, `k_s=1` to minimize false positives.
+  - **Cell Counting**: Applied blob detection to four `vgg_cells/` images, preprocessing with contrast stretching, using `σ_min=2`, `k=√2`, `S=8`, `k_xy=5`, `k_s=1`. Detected 10–30 cells per image.
+
+#### Tools
+- **NumPy**: Performed convolutions, matrix operations, and patch normalization.
+- **OpenCV**: Loaded and processed images (`cv2.imread`, `cv2.filter2D`).
+- **Matplotlib**: Visualized patches, filter outputs, corner scores, and blob detections.
+- **Python**: Implemented filtering and detection algorithms in Jupyter notebook (`HW2_code.ipynb`).
+
+#### Results
+- **Image Filtering**:
+  - Plotted three 16x16 patches, noting their sensitivity to pose and illumination changes.
+  - Gaussian filtering smoothed `grace_hopper.png`, reducing noise (Figure 2).
+  - Edge detection showed sharper gradients on original image vs. smoother on filtered (Figures 3–4).
+  - Sobel `Gx`, `Gy`, and magnitude highlighted edges (Figures 5–7); steerable filters detected edges at varying angles (Figure 8).
+  - LoG filters detected edges and blobs, with differences due to kernel scale (Figure 9).
+- **Harris Corner Detection**:
+  - Corner score images showed intensity changes for ±5 pixel shifts (Figure 10).
+  - Harris heatmap highlighted corners effectively (Figure 11).
+- **Blob Detection**:
+  - DoG detected 12 small and 6 large dots in `polka.png` with minimal false peaks (Figures 12–13).
+  - Scale-space visualized multi-scale responses (Figure 14).
+  - Cell counting detected 10–30 cells per `vgg_cells/` image, improved by contrast stretching (Figures 15–18).
+- **Output**: Saved code (`HW2_code.ipynb`), report (`Zamojcin_CSE803_HW2.pdf`), and visualizations.
+
+#### Key Skills
+- Image filtering (Gaussian, Sobel, LoG, DoG).
+- Feature extraction (edges, corners).
+- Scale-space blob detection.
+- Parameter tuning for robust detection.
+- Visualization of image processing outputs.
