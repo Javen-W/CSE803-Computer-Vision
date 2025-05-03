@@ -9,7 +9,7 @@ This repository contains my coursework for CSE803, a graduate-level Computer Vis
     - [Homework 1: Camera Projection, Color Photography, and Illuminance](#homework-1-camera-projection-color-photography-and-illuminance)
     - [Homework 2: Image Filtering, Feature Extraction, and Blob Detection](#homework-2-image-filtering-feature-extraction-and-blob-detection)
     - [Homework 3: RANSAC and Image Stitching](#homework-3-ransac-and-image-stitching)
-    - [Homework 4: TBD](#homework-4-tbd)
+    - [Homework 4: Optimization, Neural Networks, and Fooling Images](#homework-4-optimization-neural-networks-and-fooling-images)
     - [Homework 5: TBD](#homework-5-tbd)
     - [Homework 6: TBD](#homework-6-tbd)
   - [Skills Demonstrated](#skills-demonstrated)
@@ -170,3 +170,50 @@ Implemented RANSAC for robust model fitting and image stitching on `uttower_left
 - Feature detection and matching with SIFT.
 - Image stitching for panorama creation.
 - Linear algebra for transformation fitting.
+
+### Homework 4: Optimization, Neural Networks, and Fooling Images
+
+#### Description
+Implemented optimization and neural network algorithms for affine transformation fitting, image classification, and adversarial attacks on CIFAR-10. The project included four tasks: gradient descent for affine fitting, one-layer softmax classifier, two-layer softmax classifier with hidden layers, and generating fooling images.
+
+#### Approach
+- **Task 1: Optimization and Fitting**:
+  - Implemented `fc_forward`, `fc_backward`, and `l2_loss` in `layers.py` for a fully-connected layer and L2 loss, caching inputs for backpropagation.
+  - Developed `lsq` in `fitting.py` to fit `y = Sx + t` using gradient descent (10,000 iterations, `learning_rate=1e-5`) on `points_case.npy`.
+- **Task 2: Softmax Classifier (One Layer)**:
+  - Implemented `relu_forward`, `relu_backward`, and `softmax_loss` in `layers.py`, and `SoftmaxClassifier` in `softmax.py` for a fully-connected layer with softmax loss.
+  - Preprocessed CIFAR-10 images (grayscale, normalized), splitting 50,000 training images into 40,000 training and 10,000 validation.
+  - Tuned hyperparameters via cross-validation (`learning_rate=[5e-3, 5e-4]`, `lr_decay=[0.9, 0.99]`, `num_epochs=[20, 100]`).
+- **Task 3: Softmax Classifier (Hidden Layers)**:
+  - Extended `SoftmaxClassifier` to include a hidden layer (`fc-relu-fc-softmax`) with ReLU activation, testing `hidden_dim=[150, 300, 500]`.
+  - Trained on CIFAR-10 with cross-validation (`learning_rate=5e-2`, `lr_decay=0.95`, `num_epochs=20`, `reg=[0.0, 0.1]`), saving best model (`q3_3.pkl`).
+- **Task 4: Fooling Images**:
+  - Modified `SoftmaxClassifier.forwards_backwards` to return input gradients (`return_dx=True`).
+  - Implemented `gradient_ascent` in `fooling_image.py` to generate a fooling image from a correctly classified CIFAR-10 test image, targeting class 176 (`learning_rate=1e-2`).
+
+#### Tools
+- **NumPy**: Implemented neural network layers, gradient descent, and image preprocessing.
+- **Matplotlib**: Plotted training/validation accuracy curves and fooling images.
+- **Pandas**: Organized training results for plotting.
+- **Python**: Developed optimization, classification, and adversarial attack pipelines in Jupyter notebook.
+
+#### Results
+- **Optimization and Fitting**:
+  - Fitted `S` and `t` for `points_case.npy`, visualized as scatter plots (`figures/q1_case.jpg`) showing input, target, and predicted points.
+- **Softmax Classifier (One Layer)**:
+  - Achieved ~40% test accuracy (best: `q2_1`, `learning_rate=5e-3`, `lr_decay=0.9`, `num_epochs=20`).
+  - Plotted training/validation accuracy curves (`figures/q2_1-3.png`), showing convergence.
+- **Softmax Classifier (Hidden Layers)**:
+  - Achieved ~50% test accuracy (best: `q3_3`, `hidden_dim=500`, `learning_rate=5e-2`, `lr_decay=0.95`, `reg=0.0`).
+  - Plotted accuracy curves (`figures/q3_1-5.png`), demonstrating improved performance with hidden layers.
+- **Fooling Images**:
+  - Generated a fooling image misclassified as class 176, visualized original, fooling, and difference images.
+  - Noted model sensitivity to small perturbations, indicating limited robustness.
+- **Output**: Saved code (Jupyter notebook), models (`models/q2_*.pkl`, `q3_*.pkl`), plots (`figures/`), and visualizations.
+
+#### Key Skills
+- Gradient-based optimization for transformation fitting.
+- Neural network implementation (fully-connected, ReLU, softmax).
+- Hyperparameter tuning for classification.
+- Adversarial attack generation via gradient ascent.
+- Visualization of training and adversarial results.
