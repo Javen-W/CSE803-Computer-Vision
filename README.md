@@ -8,7 +8,7 @@ This repository contains my coursework for CSE803, a graduate-level Computer Vis
   - [Projects](#projects)
     - [Homework 1: Camera Projection, Color Photography, and Illuminance](#homework-1-camera-projection-color-photography-and-illuminance)
     - [Homework 2: Image Filtering, Feature Extraction, and Blob Detection](#homework-2-image-filtering-feature-extraction-and-blob-detection)
-    - [Homework 3: TBD](#homework-3-tbd)
+    - [Homework 3: RANSAC and Image Stitching](#homework-3-ransac-and-image-stitching)
     - [Homework 4: TBD](#homework-4-tbd)
     - [Homework 5: TBD](#homework-5-tbd)
     - [Homework 6: TBD](#homework-6-tbd)
@@ -122,3 +122,51 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
 - Scale-space blob detection.
 - Parameter tuning for robust detection.
 - Visualization of image processing outputs.
+
+### Homework 3: RANSAC and Image Stitching
+
+#### Description
+Implemented RANSAC for robust model fitting and image stitching on `uttower_left.jpg`, `uttower_right.jpg`, `bbb_left.jpg`, and `bbb_right.jpg`. The project included two tasks: RANSAC for line and transformation fitting, and image stitching using SIFT features and homography estimation.
+
+#### Approach
+- **Task 1: RANSAC**:
+  - **Fitting a Line**:
+    - Determined 2 points are needed to fit a line (`y = mx + b`).
+    - Calculated failure probability for a 0.1 outlier ratio: `(1 - (1-0.1)²) = 0.19`.
+    - Computed 16 trials needed for 95% success probability using `log(1-0.95)/log(1-0.19)`.
+  - **Fitting Transformations**:
+    - Noted a 2x2 linear transformation `M` has 4 degrees of freedom, requiring 2 point correspondences.
+    - Formulated `y = Mx` as least squares: `argmin_m ||Am - b||²`, where `A = [x1 0 x2 0; 0 x1 0 x2; ...]`, `m = [M11, M12, M21, M22]`, `b = [y1; y2; ...]`.
+    - Loaded `p1/transform.npy`, fitted `y = Sx + t` using least squares, solving `Av = b` for `v = [S11, S12, S21, S22, t1, t2]`.
+    - Fitted homographies for 8 cases (`p1/points_case_0-7.npy`), solving `argmin_h ||Ah||²` with `||h||=1` using SVD.
+- **Task 2: Image Stitching**:
+  - Loaded `uttower` and `bbb` images, converted to grayscale.
+  - Detected SIFT features using `cv2.SIFT_create()` with custom thresholds (`contrastThreshold=0.15`, `edgeThreshold=7`).
+  - Computed Euclidean distances between normalized descriptors, selecting matches with distance < 8.0.
+  - Ran RANSAC to estimate homography `H` (4 points, 10,000 iterations, threshold `std(Y/2)`), computing inliers and average residual.
+  - Warped right image using `cv2.warpPerspective` and composited with left image by copying pixels.
+
+#### Tools
+- **NumPy**: Solved least squares and SVD for transformation fitting, computed descriptor distances.
+- **OpenCV**: Detected SIFT features (`cv2.SIFT_create`), warped images (`cv2.warpPerspective`), drew matches (`cv2.drawMatches`).
+- **Matplotlib**: Visualized point transformations and feature matches.
+- **Python**: Implemented RANSAC and stitching pipeline in Jupyter notebook.
+
+#### Results
+- **RANSAC**:
+  - Line fitting: 2 points, 19% failure probability, 16 trials for 95% success.
+  - Transformation fitting: Fitted `S` and `t` for `p1/transform.npy`, showing good scale/translation but poor rotation (plot in notebook).
+  - Homography fitting: Fitted `H` for 8 cases, with 7 cases aligning well; case #4 showed diagonal misalignment (visualizations in `p1_cases/case_0-7.png`).
+- **Image Stitching**:
+  - Detected ~100–200 SIFT features per image, matched ~50–100 pairs.
+  - RANSAC yielded ~20–40 inliers per pair, with low residuals (exact values in notebook output).
+  - Produced panoramas for `uttower` and `bbb` pairs, saved as `p2_output/panorama_uttower.jpg` and `p2_output/panorama_bbb.jpg`.
+  - Visualized features (`sift_uttower1.jpg`), matches, inliers (`inliers_uttower.jpg`), and warped images.
+- **Output**: Saved code (Jupyter notebook), visualizations (`p2_output/`), and homography matrices.
+
+#### Key Skills
+- Robust model fitting with RANSAC.
+- Homography estimation and image warping.
+- Feature detection and matching with SIFT.
+- Image stitching for panorama creation.
+- Linear algebra for transformation fitting.
