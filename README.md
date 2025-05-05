@@ -11,7 +11,7 @@ This repository contains my coursework for CSE803, a graduate-level Computer Vis
     - [Homework 3: RANSAC and Image Stitching](#homework-3-ransac-and-image-stitching)
     - [Homework 4: Optimization, Neural Networks, and Fooling Images](#homework-4-optimization-neural-networks-and-fooling-images)
     - [Homework 5: ConvNets, Activation Visualization, and Semantic Segmentation](#homework-5-convnets-activation-visualization-and-semantic-segmentation)
-    - [Homework 6: TBD](#homework-6-tbd)
+    - [Homework 6: Camera Calibration, Fundamental Matrix, and Triangulation](#homework-6-camera-calibration-fundamental-matrix-and-triangulation)
   - [Skills Demonstrated](#skills-demonstrated)
 
 ## Projects
@@ -268,3 +268,75 @@ Implemented convolutional neural networks (ConvNets) in PyTorch for Fashion-MNIS
 - U-Net implementation for semantic segmentation.
 - Hyperparameter tuning and loss analysis.
 - Custom dataset handling and image preprocessing.
+
+### Homework 6: Camera Calibration, Fundamental Matrix, and Triangulation
+
+#### Description
+Implemented algorithms for camera calibration, fundamental matrix estimation, and 3D triangulation using the Wizarding Temple dataset. The project included three tasks: computing the projection matrix, estimating the fundamental matrix with epipolar lines, and triangulating 3D points from 2D correspondences.
+
+#### Approach
+- **Task 1: Camera Calibration**:
+  - Loaded 2D (`pts2d-norm-pic.txt`, 20 points) and 3D (`pts3d-norm.txt`, 20 points) correspondences.
+  - Implemented `fit_projection` to solve for the 3x4 projection matrix `P` using SVD, constructing a system of equations for each point pair.
+- **Task 2: Fundamental Matrix Estimation**:
+  - Loaded 110 point correspondences (`pts1`, `pts2`) and images (`im1.png`, `im2.png`) from `temple.npz`.
+  - Implemented `fit_fundamental` using the eight-point algorithm:
+    - Normalized points to zero mean and unit distance using a transformation matrix.
+    - Constructed matrix `A` for `Af = 0`, solved using SVD, and enforced rank-2 constraint.
+    - Denormalized the fundamental matrix `F` and scaled so `F[2,2]=1`.
+  - Visualized epipolar lines for 15 point pairs using `draw_epipolar`.
+- **Task 3: Triangulation**:
+  - Loaded intrinsic matrices `K1`, `K2` from `temple.npz`.
+  - Computed the essential matrix `E` using `F` from `cv2.findFundamentalMat` and `E = K2^T F K1^-1`.
+  - Decomposed `E` using `cv2.decomposeEssentialMat` to obtain rotation `R` and translation `t`, selecting the pose with 57 points in front of both cameras.
+  - Constructed projection matrices `P1 = K1[I|0]` and `P2 = K2[R|t]`.
+  - Triangulated 110 2D point pairs to 3D using `cv2.triangulatePoints`.
+  - Visualized the 3D point cloud using Open3D.
+
+#### Tools
+- **NumPy**: Performed SVD, matrix operations, and point normalization.
+- **OpenCV**: Computed fundamental/essential matrices (`cv2.findFundamentalMat`, `cv2.decomposeEssentialMat`), triangulated points (`cv2.triangulatePoints`), and drew epipolar lines (`cv2.computeCorrespondEpilines`).
+- **Matplotlib**: Visualized epipolar lines.
+- **Open3D**: Visualized 3D point clouds.
+- **Python**: Implemented calibration, estimation, and triangulation pipelines.
+
+#### Results
+- **Camera Calibration**:
+  - Computed projection matrix `P` (3x4) for 20 correspondences, reported in the output.
+- **Fundamental Matrix Estimation**:
+  - Estimated fundamental matrix `F` (3x3) using the eight-point algorithm, normalized to `F[2,2]=1`.
+  - Visualized epipolar lines for 15 point pairs, confirming correct correspondence mapping.
+- **Triangulation**:
+  - Computed essential matrix `E` (3x3) and decomposed to `R` and `t`, selecting the pose with 57 positive-depth points.
+  - Constructed projection matrices `P1` and `P2` (3x4).
+  - Triangulated 110 points to 3D, producing a point cloud (3x110).
+  - Visualized the point cloud in Open3D from multiple views, showing the 3D structure of the Wizarding Temple.
+- **Output**: Saved code, matrices (`P`, `F`, `E`, `P1`, `P2`), epipolar line visualizations, and 3D point cloud renderings.
+
+#### Key Skills
+- Camera calibration using 2D-3D correspondences.
+- Fundamental and essential matrix estimation.
+- 3D triangulation with Direct Linear Transform.
+- Epipolar geometry and point cloud visualization.
+- Linear algebra and SVD for geometric computations.
+
+## Skills Demonstrated
+- **Computer Vision and Machine Learning**:
+  - Implemented algorithms for 3D projection, image filtering, feature extraction, robust model fitting, image stitching, neural network classification, activation visualization, semantic segmentation, camera calibration, fundamental matrix estimation, 3D triangulation, and adversarial attacks, addressing challenges like historical photo restoration, cell counting, panorama creation, CIFAR-10/Fashion-MNIST classification, facade segmentation, and 3D reconstruction.
+  - Developed pipelines for rendering 3D objects, reconstructing color images, detecting features, aligning images, classifying images, visualizing activations, segmenting facades, calibrating cameras, and reconstructing 3D scenes.
+- **Algorithm Development**:
+  - Designed 3D rotation matrices, orthographic projection, homography estimation, neural network layers, ConvNets, U-Net, fundamental matrix estimation, and triangulation for geometric, classification, and reconstruction tasks.
+  - Built image filtering (Gaussian, Sobel, LoG), feature detection (SIFT, Harris), robust fitting (RANSAC), gradient-based optimization, ConvNet-based classification/segmentation, and eight-point algorithm for epipolar geometry.
+  - Implemented scale-space blob detection, image stitching, softmax classifiers, activation visualization, and 3D point cloud generation.
+- **Libraries and Tools**:
+  - **NumPy**: Performed matrix operations, convolutions, SVD, descriptor distances, point normalization, and dataset preprocessing.
+  - **OpenCV**: Handled image loading, filtering, feature detection (`cv2.SIFT_create`), warping (`cv2.warpPerspective`), fundamental/essential matrix computation, triangulation (`cv2.triangulatePoints`), and epipolar line visualization.
+  - **PyTorch**: Implemented ConvNets, U-Net, and training pipelines for classification and segmentation.
+  - **Matplotlib**: Visualized image patches, filter responses, corner scores, point transformations, accuracy/loss curves, activation maps, segmentation outputs, and epipolar lines.
+  - **Pandas**: Organized training results for plotting.
+  - **Open3D**: Visualized 3D point clouds for triangulation.
+  - **Python**: Developed efficient scripts and notebooks for vision and ML tasks.
+- **Technical Proficiency**:
+  - Applied mathematical concepts (e.g., convolution, linear algebra, probability, gradients, epipolar geometry) to solve vision and reconstruction problems.
+  - Tuned parameters (e.g., SIFT thresholds, learning rates, kernel sizes) to optimize performance.
+  - Delivered well-documented code, visualizations, and reports, suitable for research and engineering roles.
