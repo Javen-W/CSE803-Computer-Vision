@@ -57,6 +57,12 @@ Developed algorithms for 3D camera projection, color image reconstruction from g
   - Submitted `im1.jpg`, `im2.jpg`, and `info.txt` with lighting conditions and patch coordinates.
 - **Output**: Saved code (e.g., `dolly_zoom.py`), aligned images, `cube.gif`, and report with offsets and plots.
 
+![cube](https://github.com/user-attachments/assets/591d3426-addd-4f50-9667-20296de6c2dd)
+
+![aligned_00125v](https://github.com/user-attachments/assets/8d308b1f-90f8-4d8f-9a83-d3f4f3991af0)
+
+![aligned_00351v](https://github.com/user-attachments/assets/6d70cb89-bd55-4be3-93e9-7917b27ad068)
+
 #### Key Skills
 - 3D geometry and camera projection.
 - Image alignment and color reconstruction.
@@ -116,6 +122,14 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
   - Cell counting detected 10–30 cells per `vgg_cells/` image, improved by contrast stretching (Figures 15–18).
 - **Output**: Saved code (`HW2_code.ipynb`), report (`Zamojcin_CSE803_HW2.pdf`), and visualizations.
 
+![q2_edge_sobel](https://github.com/user-attachments/assets/a14bfd5d-b631-433d-ac3a-63cae1821c81)
+
+![maxima_073cell](https://github.com/user-attachments/assets/543b1b3f-b4fa-4eb6-8369-6b3b85f138db)
+
+![polka_small](https://github.com/user-attachments/assets/473a5dba-35d7-4baa-8c09-5b738fd624cf)
+
+![preprocess_031cell](https://github.com/user-attachments/assets/11f0442a-a0a3-4b2c-b75e-f55c7b9f3b47)
+
 #### Key Skills
 - Image filtering (Gaussian, Sobel, LoG, DoG).
 - Feature extraction (edges, corners).
@@ -164,6 +178,12 @@ Implemented RANSAC for robust model fitting and image stitching on `uttower_left
   - Visualized features (`sift_uttower1.jpg`), matches, inliers (`inliers_uttower.jpg`), and warped images.
 - **Output**: Saved code (Jupyter notebook), visualizations (`p2_output/`), and homography matrices.
 
+![case_7](https://github.com/user-attachments/assets/46b6c4c2-d263-41da-8b37-8eb21a11687c)
+
+![q1p4](https://github.com/user-attachments/assets/42e9ae12-7a0d-42ba-87aa-b29e5500f4bc)
+
+![panorama_uttower](https://github.com/user-attachments/assets/b227d50e-fcac-4bd9-ba28-954cc7fa6600)
+
 #### Key Skills
 - Robust model fitting with RANSAC.
 - Homography estimation and image warping.
@@ -210,6 +230,12 @@ Implemented optimization and neural network algorithms for affine transformation
   - Generated a fooling image misclassified as class 176, visualized original, fooling, and difference images.
   - Noted model sensitivity to small perturbations, indicating limited robustness.
 - **Output**: Saved code (Jupyter notebook), models (`models/q2_*.pkl`, `q3_*.pkl`), plots (`figures/`), and visualizations.
+
+![q3_4](https://github.com/user-attachments/assets/563bd1cf-5b0c-4f5e-b26f-81a844c30e22)
+
+![q4_original](https://github.com/user-attachments/assets/282c1bdd-0b17-4c37-90b0-bfe41f21d229)
+
+![q4_altered](https://github.com/user-attachments/assets/2a0f0379-dbfe-4ec9-a4ef-2ab12e7b7add)
 
 #### Key Skills
 - Gradient-based optimization for transformation fitting.
@@ -262,6 +288,12 @@ Implemented convolutional neural networks (ConvNets) in PyTorch for Fashion-MNIS
   - Tested on `input.jpg`, producing `output.png` with qualitative comments on segmentation performance (e.g., facade/window detection accuracy).
   - Saved model (`part3/models/model_2.pth`) and test outputs (`part3/output_test/`).
 
+![output](https://github.com/user-attachments/assets/422f74cf-ee42-4034-a4dc-52a54276b7fa)
+
+![q2_correct](https://github.com/user-attachments/assets/5c0e6716-4665-4047-9b8e-fabd2e34ff07)
+
+![q2_map](https://github.com/user-attachments/assets/0809752a-beba-4d57-8d3c-19aac8bd0b1b)
+
 #### Key Skills
 - Convolutional neural network design and training.
 - Activation map visualization for model interpretability.
@@ -312,6 +344,10 @@ Implemented algorithms for camera calibration, fundamental matrix estimation, an
   - Triangulated 110 points to 3D, producing a point cloud (3x110).
   - Visualized the point cloud in Open3D from multiple views, showing the 3D structure of the Wizarding Temple.
 - **Output**: Saved code, matrices (`P`, `F`, `E`, `P1`, `P2`), epipolar line visualizations, and 3D point cloud renderings.
+
+![Q2_Epipolar](https://github.com/user-attachments/assets/f03c0e78-0f65-4835-9f68-76f9caeab3f2)
+
+![Q3-1](https://github.com/user-attachments/assets/d8262538-0d5d-4808-8f45-18341f7fb34c)
 
 #### Key Skills
 - Camera calibration using 2D-3D correspondences.
