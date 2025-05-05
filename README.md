@@ -133,12 +133,6 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
   - Cell counting detected ~10–30 cells per microscopy image, visualized with maxima circles (`maxima_031cell.png`, etc.) and preprocessed images (`preprocess_031cell.png`, etc.).
 - **Output**: Saved code, visualizations (`image_patches/`, `gaussian_filter/`, `sobel_operator/`, `log_filter/`, `feature_detection/`, `polka_*.png`, `preprocess_*.png`, `maxima_*.png`), and report.
 
-#### Key Skills
-- Image filtering (Gaussian, Sobel, LoG, DoG).
-- Feature extraction (edges, corners, blobs).
-- Scale-space blob detection and cell counting.
-- Parameter tuning for robust detection (e.g., `σ`, `k_xy`).
-- Visualization of image processing and detection outputs.
 ![q2_edge_sobel](https://github.com/user-attachments/assets/a14bfd5d-b631-433d-ac3a-63cae1821c81)
 
 ![preprocess_031cell](https://github.com/user-attachments/assets/11f0442a-a0a3-4b2c-b75e-f55c7b9f3b47)
@@ -147,10 +141,10 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
 
 #### Key Skills
 - Image filtering (Gaussian, Sobel, LoG, DoG).
-- Feature extraction (edges, corners).
-- Scale-space blob detection.
-- Parameter tuning for robust detection.
-- Visualization of image processing outputs.
+- Feature extraction (edges, corners, blobs).
+- Scale-space blob detection and cell counting.
+- Parameter tuning for robust detection (e.g., `σ`, `k_xy`).
+- Visualization of image processing and detection outputs.
 
 ### Homework 3: RANSAC and Image Stitching
 
