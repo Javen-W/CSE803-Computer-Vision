@@ -10,7 +10,7 @@ This repository contains my coursework for CSE803, a graduate-level Computer Vis
     - [Homework 2: Image Filtering, Feature Extraction, and Blob Detection](#homework-2-image-filtering-feature-extraction-and-blob-detection)
     - [Homework 3: RANSAC and Image Stitching](#homework-3-ransac-and-image-stitching)
     - [Homework 4: Optimization, Neural Networks, and Fooling Images](#homework-4-optimization-neural-networks-and-fooling-images)
-    - [Homework 5: TBD](#homework-5-tbd)
+    - [Homework 5: ConvNets, Activation Visualization, and Semantic Segmentation](#homework-5-convnets-activation-visualization-and-semantic-segmentation)
     - [Homework 6: TBD](#homework-6-tbd)
   - [Skills Demonstrated](#skills-demonstrated)
 
@@ -217,3 +217,54 @@ Implemented optimization and neural network algorithms for affine transformation
 - Hyperparameter tuning for classification.
 - Adversarial attack generation via gradient ascent.
 - Visualization of training and adversarial results.
+
+### Homework 5: ConvNets, Activation Visualization, and Semantic Segmentation
+
+#### Description
+Implemented convolutional neural networks (ConvNets) in PyTorch for Fashion-MNIST classification, activation visualization, and semantic segmentation on the Mini Facade dataset. The project included three tasks: ConvNet classification, activation map visualization using a custom grid dataset, and U-Net-based semantic segmentation.
+
+#### Approach
+- **Task 1: Fashion-MNIST Classification**:
+  - Designed a ConvNet (`Network`) with three convolutional layers (1→32, 32→64, 64→128, 3x3 kernels, padding=1, ReLU, max-pooling 2x2), followed by two fully-connected layers (2048→625, 625→10).
+  - Preprocessed Fashion-MNIST (normalized to mean=0.2859, std=0.3530), splitting 60,000 images into 50,000 training and 10,000 validation.
+  - Trained using Adam optimizer (`lr=0.001`, `weight_decay=1e-4`), batch size 64, and 15 epochs.
+- **Task 2: Activation Visualization**:
+  - Used `GridDataset` to create 2x2 grid images (one Fashion-MNIST, three MNIST images, random positions).
+  - Designed a ConvNet (`Network.base`) with three convolutional layers (1→32, 32→64, 64→128, 5x5 kernels, padding=2, ReLU, max-pooling 2x2), followed by global average pooling and a linear layer (128→10).
+  - Replaced GAP and linear layers with a 1x1 conv layer for visualization, transferring weights via `transfer()`.
+  - Trained using Adam (`lr=0.001`, `weight_decay=1e-4`), batch size 64, and 6 epochs.
+  - Visualized activation maps for a correctly classified test image (index 3).
+- **Task 3: Semantic Segmentation**:
+  - Designed a U-Net (`UNet`) with an encoder (3→64→128→256, 3x3 kernels, padding=1, ReLU, max-pooling) and decoder (512→128→64→32→5, upsampling via bilinear interpolation, skip connections).
+  - Preprocessed Mini Facade images (normalized to [-1, 1]), using 905 training, 57 validation, and 57 test images.
+  - Trained using Adam (`lr=0.001`, `weight_decay=1e-5`), batch size 32, and 15 epochs.
+  - Tested on a custom building image (`input.jpg`).
+
+#### Tools
+- **PyTorch**: Implemented ConvNets, U-Net, and training pipelines.
+- **NumPy**: Handled dataset preprocessing and activation map manipulation.
+- **OpenCV**: Processed custom building images.
+- **Matplotlib**: Plotted training/validation loss curves and activation maps.
+- **Pandas**: Organized training results for plotting.
+- **Python**: Developed classification, visualization, and segmentation pipelines.
+
+#### Results
+- **Fashion-MNIST Classification**:
+  - Achieved 91.89% test accuracy, exceeding the 90% target.
+  - Plotted training/validation loss (`figures/q1_losses.png`), showing convergence (train_loss=0.0588, val_loss=0.2856 at epoch 15).
+- **Activation Visualization**:
+  - Achieved 80.3% test accuracy, meeting the 80% target.
+  - Visualized activation maps for test image index 3, showing higher activation at the Fashion-MNIST image’s position for the ground truth class.
+  - Saved image and activation map plots, confirming the model focused on Fashion-MNIST regions.
+- **Semantic Segmentation**:
+  - Achieved average precision (AP) of [0.648, 0.767, 0.064, 0.855, 0.640] across five classes, averaging ~0.595, exceeding the 0.45 target.
+  - Plotted training/validation loss (`figures/q3_losses.png`), showing convergence (train_loss=1.037, val_loss=1.171 at epoch 15).
+  - Tested on `input.jpg`, producing `output.png` with qualitative comments on segmentation performance (e.g., facade/window detection accuracy).
+  - Saved model (`part3/models/model_2.pth`) and test outputs (`part3/output_test/`).
+
+#### Key Skills
+- Convolutional neural network design and training.
+- Activation map visualization for model interpretability.
+- U-Net implementation for semantic segmentation.
+- Hyperparameter tuning and loss analysis.
+- Custom dataset handling and image preprocessing.
