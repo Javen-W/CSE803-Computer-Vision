@@ -77,51 +77,68 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
 
 #### Approach
 - **Task 1: Image Filtering**:
-  - **Image Patches**: Divided `grace_hopper.png` (grayscale) into 16x16 patches, normalized to zero mean and unit variance using `image_patches()` in `filters.py`.
+  - **Image Patches**:
+    - Implemented `image_patches()` to divide `grace_hopper.png` (grayscale) into 16x16 patches, normalized to zero mean and unit variance using `normalize()`.
+    - Extracted patches via slicing, producing a list of 1152 patches (based on image dimensions).
   - **Gaussian Filter**:
-    - Proved 2D Gaussian convolution equals sequential 1D vertical and horizontal convolutions, with equal variances.
-    - Applied 3x3 Gaussian kernel (`σ² ≈ 2 ln 2`) via `convolve()` to `grace_hopper.png`, implementing true convolution.
-    - Derived derivative kernels for edge detection (`edge_detection()`), computing gradient magnitude.
-    - Compared edge detection on original vs. Gaussian-filtered images.
+    - Developed `gaussian_kernel(l=3, std=sqrt(1/(2*log(2))))` to compute a 3x3 Gaussian kernel, ensuring proper normalization.
+    - Implemented `convolve()` for true convolution (not cross-correlation), applying the Gaussian kernel to `grace_hopper.png` for blurring.
+  - **Edge Detection**:
+    - Implemented `edge_detection()` using 1x3 and 3x1 derivative kernels (`kx=[1,0,-1]/2`, `ky=[1,0,-1]^T/2`) to compute gradients `Ix`, `Iy`, and gradient magnitude.
+    - Compared edge detection on original vs. Gaussian-filtered images to analyze noise reduction.
   - **Sobel Operator**:
-    - Proved Sobel operators approximate derivatives of Gaussian-filtered images.
-    - Implemented `sobel_operator()` to compute `Gx`, `Gy`, and gradient magnitude.
-    - Derived steerable filter kernel `K(α)` for `S(I, α) = Gx cos α + Gy sin α`, implemented `steerable_filter()` for `α = [0, π/6, π/3, π/2, 2π/3, 5π/6]`.
+    - Implemented `sobel_operator()` using 3x3 Sobel kernels (`Sx=[1,0,-1;2,0,-2;1,0,-1]`, `Sy=Sx^T`) to compute `Gx`, `Gy`, and gradient magnitude.
+    - Developed `steerable_filter()` to compute edge responses at angles `[0, π/6, π/3, π/2, 2π/3, 5π/6]`, using `K(α) = cos(α)Kx + sin(α)Ky`.
   - **LoG Filter**:
-    - Applied two LoG filters via `filters.py`, comparing outputs for edge and blob detection.
-    - Explained DoG as a LoG approximation, visualizing Gaussian differences.
+    - Applied two Laplacian of Gaussian (LoG) kernels: a 3x3 kernel (`[0,1,0;1,-4,1;0,1,0]`) and a 9x9 kernel with Gaussian smoothing.
+    - Compared outputs to highlight edge detection vs. smoothed blob detection.
 - **Task 2: Harris Corner Detection**:
-  - Implemented `corner_score()` to compute SSD-based `E(u,v)` for offsets (u,v), testing shifts of ±5 pixels.
-  - Developed `harris_detector()` to compute structure tensor `M` via convolution, calculating cornerness `R = det(M) - 0.05 * trace(M)²` with Gaussian-weighted sums.
-  - Generated corner score heatmap for `grace_hopper.png`.
+  - Implemented `corner_score(u=0, v=2, window_size=(5,5))` to compute the sum of squared differences (SSD) `E(u,v)` for pixel shifts, using zero-padding for boundary handling.
+  - Developed `harris_detector(window_size=(5,5))` to compute the Harris response `R = det(M) - 0.05*trace(M)²`, using Sobel derivatives, Gaussian smoothing, and a threshold of 0.5.
 - **Task 3: Blob Detection**:
-  - **Single-Scale**: Implemented `gaussian_filter()` and applied DoG filters on `polka.png`, selecting `σ` pairs (`σ1=1, σ2=1.414` for small dots; `σ1=2, σ2=2.828` for large dots) based on `r = √2σ`.
-  - **Scale Space**: Built scale-space representation (`scale_space()`) with `σ_min=1`, `k=√2`, `S=8`, generating 7 DoG levels.
-  - **Blob Detection**: Used `find_maxima()` to detect peaks, tuning `k_xy=3`, `k_s=1` to minimize false positives.
-  - **Cell Counting**: Applied blob detection to four `vgg_cells/` images, preprocessing with contrast stretching, using `σ_min=2`, `k=√2`, `S=8`, `k_xy=5`, `k_s=1`. Detected 10–30 cells per image.
+  - **Single-Scale**:
+    - Implemented `gaussian_filter()` using `cv2.filter2D` and `gaussian_kernel` to apply Gaussian filters.
+    - Computed Difference of Gaussians (DoG) with `difference_of_gaussian()` for `polka.png`, using `σ1=8.0, σ2=11.3` (small dots) and `σ1=22.6, σ2=32.0` (large dots).
+  - **Scale Space**:
+    - Implemented `scale_space(min_sigma, k=√2, S=8)` to generate a DoG scale space with 7 levels, swapping axes for `HxWx(S-1)` output.
+    - Applied to `polka.png` with `min_sigma=8.0` (small dots) and `22.6` (large dots).
+  - **Blob Detection**:
+    - Used `find_maxima(k_xy=8 or 10, k_s=1)` to detect peaks in DoG images, identifying 25 small and 16 large polka dots.
+    - Visualized maxima with circles scaled by `√(2*σ)` using `visualize_maxima`.
+  - **Cell Counting**:
+    - Processed four microscopy images (`031cell.png`, `054cell.png`, `073cell.png`, `106cell.png`) with binarization (threshold=0.07).
+    - Applied scale-space blob detection (`min_sigma=1.1, k=√2, S=8, k_xy=10, k_s=1`), detecting ~10–30 cells per image.
 
 #### Tools
-- **NumPy**: Performed convolutions, matrix operations, and patch normalization.
-- **OpenCV**: Loaded and processed images (`cv2.imread`, `cv2.filter2D`).
-- **Matplotlib**: Visualized patches, filter outputs, corner scores, and blob detections.
-- **Python**: Implemented filtering and detection algorithms in Jupyter notebook (`HW2_code.ipynb`).
+- **NumPy**: Performed convolutions, matrix operations, patch normalization, and kernel computations.
+- **OpenCV**: Applied Gaussian filtering (`cv2.filter2D`) and image loading.
+- **Matplotlib**: Visualized patches, filter outputs, corner scores, scale spaces, and blob detections.
+- **scikit-image**: Loaded images (`skimage.io.imread`).
+- **Python**: Implemented filtering, detection, and visualization pipelines.
 
 #### Results
 - **Image Filtering**:
-  - Plotted three 16x16 patches, noting their sensitivity to pose and illumination changes.
-  - Gaussian filtering smoothed `grace_hopper.png`, reducing noise (Figure 2).
-  - Edge detection showed sharper gradients on original image vs. smoother on filtered (Figures 3–4).
-  - Sobel `Gx`, `Gy`, and magnitude highlighted edges (Figures 5–7); steerable filters detected edges at varying angles (Figure 8).
-  - LoG filters detected edges and blobs, with differences due to kernel scale (Figure 9).
+  - Generated 1152 normalized 16x16 patches from `grace_hopper.png`, visualized three random patches (`q1_patch0-2.png`).
+  - Applied Gaussian filter, producing blurred output (`q2_gaussian.png`).
+  - Edge detection on original image (`q3_edge.png`) showed sharp edges with noise; Gaussian-filtered edges (`q3_edge_gaussian.png`) were smoother with reduced noise.
+  - Sobel operator produced `Gx` (`q2_Gx.png`), `Gy` (`q2_Gy.png`), and gradient magnitude (`q2_edge_sobel.png`), highlighting edges.
+  - Steerable filters generated six edge responses (`q3_steerable_0-5.png`), emphasizing edges at specified angles.
+  - LoG filters produced edge (`q1_LoG1.png`) and smoothed blob (`q1_LoG2.png`) detections, with the 9x9 kernel reducing noise but blurring edges.
 - **Harris Corner Detection**:
-  - Corner score images showed intensity changes for ±5 pixel shifts (Figure 10).
-  - Harris heatmap highlighted corners effectively (Figure 11).
+  - Corner score image (`corner_score.png`) showed SSD for `u=0, v=2`, highlighting intensity changes.
+  - Harris response (`harris_response.png`) detected corners effectively, though computationally intensive for large offsets.
 - **Blob Detection**:
-  - DoG detected 12 small and 6 large dots in `polka.png` with minimal false peaks (Figures 12–13).
-  - Scale-space visualized multi-scale responses (Figure 14).
-  - Cell counting detected 10–30 cells per `vgg_cells/` image, improved by contrast stretching (Figures 15–18).
-- **Output**: Saved code (`HW2_code.ipynb`), report (`Zamojcin_CSE803_HW2.pdf`), and visualizations.
+  - Detected 25 small polka dots (`polka_small.png`, `σ1=8.0, σ2=11.3`) and 16 large polka dots (`polka_large.png`, `σ1=22.6, σ2=32.0`) in `polka.png`.
+  - Visualized scale spaces (`polka_scalespace_small.png`, `polka_scalespace_large.png`) showing multi-scale DoG responses.
+  - Cell counting detected ~10–30 cells per microscopy image, visualized with maxima circles (`maxima_031cell.png`, etc.) and preprocessed images (`preprocess_031cell.png`, etc.).
+- **Output**: Saved code, visualizations (`image_patches/`, `gaussian_filter/`, `sobel_operator/`, `log_filter/`, `feature_detection/`, `polka_*.png`, `preprocess_*.png`, `maxima_*.png`), and report.
 
+#### Key Skills
+- Image filtering (Gaussian, Sobel, LoG, DoG).
+- Feature extraction (edges, corners, blobs).
+- Scale-space blob detection and cell counting.
+- Parameter tuning for robust detection (e.g., `σ`, `k_xy`).
+- Visualization of image processing and detection outputs.
 ![q2_edge_sobel](https://github.com/user-attachments/assets/a14bfd5d-b631-433d-ac3a-63cae1821c81)
 
 ![preprocess_031cell](https://github.com/user-attachments/assets/11f0442a-a0a3-4b2c-b75e-f55c7b9f3b47)
