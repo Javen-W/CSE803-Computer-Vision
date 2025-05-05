@@ -57,11 +57,11 @@ Developed algorithms for 3D camera projection, color image reconstruction from g
   - Submitted `im1.jpg`, `im2.jpg`, and `info.txt` with lighting conditions and patch coordinates.
 - **Output**: Saved code (e.g., `dolly_zoom.py`), aligned images, `cube.gif`, and report with offsets and plots.
 
-![cube](https://github.com/user-attachments/assets/591d3426-addd-4f50-9667-20296de6c2dd)
-
 ![aligned_00125v](https://github.com/user-attachments/assets/8d308b1f-90f8-4d8f-9a83-d3f4f3991af0)
 
 ![aligned_00351v](https://github.com/user-attachments/assets/6d70cb89-bd55-4be3-93e9-7917b27ad068)
+
+![aligned_efros_tableau](https://github.com/user-attachments/assets/f8e65e86-3250-42ca-a3ef-f51ddd8b35f8)
 
 #### Key Skills
 - 3D geometry and camera projection.
@@ -124,11 +124,9 @@ Implemented image processing techniques on `grace_hopper.png` and `polka.png`, i
 
 ![q2_edge_sobel](https://github.com/user-attachments/assets/a14bfd5d-b631-433d-ac3a-63cae1821c81)
 
-![maxima_073cell](https://github.com/user-attachments/assets/543b1b3f-b4fa-4eb6-8369-6b3b85f138db)
+![preprocess_031cell](https://github.com/user-attachments/assets/11f0442a-a0a3-4b2c-b75e-f55c7b9f3b47)
 
 ![polka_small](https://github.com/user-attachments/assets/473a5dba-35d7-4baa-8c09-5b738fd624cf)
-
-![preprocess_031cell](https://github.com/user-attachments/assets/11f0442a-a0a3-4b2c-b75e-f55c7b9f3b47)
 
 #### Key Skills
 - Image filtering (Gaussian, Sobel, LoG, DoG).
