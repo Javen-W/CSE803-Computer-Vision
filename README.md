@@ -273,8 +273,7 @@ Implemented convolutional neural networks (ConvNets) in PyTorch for Fashion-MNIS
   - Designed a U-Net (`UNet`) with an encoder (3→64→128→256, 3x3 kernels, padding=1, ReLU, max-pooling) and decoder (512→128→64→32→5, upsampling via bilinear interpolation, skip connections).
   - Preprocessed Mini Facade images (normalized to [-1, 1]), using 905 training, 57 validation, and 57 test images.
   - Trained using Adam (`lr=0.001`, `weight_decay=1e-5`), batch size 32, and 15 epochs.
-  - Tested on a custom building image (`input.jpg`).
-
+  
 #### Tools
 - **PyTorch**: Implemented ConvNets, U-Net, and training pipelines.
 - **NumPy**: Handled dataset preprocessing and activation map manipulation.
